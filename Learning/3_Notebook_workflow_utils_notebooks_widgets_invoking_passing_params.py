@@ -54,13 +54,27 @@ print("put to write some data into a file")
 
 # COMMAND ----------
 
+# MAGIC %fs ls /Volumes/workspace/default/volumewd36
+# MAGIC
+# MAGIC
+
+# COMMAND ----------
+
 print("try below command without the 3rd argument of true, you will find the dbfs-> hadoop -> spark -> s3 bucket")
 #dbutils.fs.put("dbfs:///Volumes/workspace/default/volumewd36/sample_healthcare_patients1.csv","put something",False)
-print(dbutils.fs.head("/Volumes/workspace/default/volumewd36/sample_healthcare_patients1.csv"))
-dbutils.fs.put("dbfs:///Volumes/workspace/default/volumewd36/sample_healthcare_patients1.csv","put something",True)
+print(dbutils.fs.head("/Volumes/workspace/default/volumewd36/copy/accounts.csv"))
+dbutils.fs.put("dbfs:///Volumes/workspace/default/volumewd36/copy/accounts.csv","put something",True)
 print("see the data in the file")
-print(dbutils.fs.head("/Volumes/workspace/default/volumewd36/sample_healthcare_patients1.csv"))
-dbutils.fs.rm("/Volumes/workspace/default/volumewd36/healthcare/sample_healthcare_patients1.csv")
+print(dbutils.fs.head("/Volumes/workspace/default/volumewd36/copy/accounts.csv"))
+
+
+# COMMAND ----------
+
+dbutils.fs.rm("/Volumes/workspace/default/volumewd36/accounts.csv", False)
+#Recursive delete (True) = delete folder + all items inside
+#Non-recursive (False) = delete only the file
+dbutils.fs.ls("/Volumes/workspace/default/volumewd36")
+
 
 # COMMAND ----------
 
@@ -81,12 +95,29 @@ dbutils.widgets.help()
 
 print("can you create a textbox widget")
 dbutils.widgets.text("tablename","cities","enter the tablename to query")
+#dbutils.widgets.text("name","Type your name","enter your name")
 
 # COMMAND ----------
 
 print("can you get the value of the widget using dbutils.widgets.get and store into a local python variable tblname")
 tblname=dbutils.widgets.get("tablename")
 print("user passed the value of ?",tblname)
+display(spark.sql(f"select * from default.{tblname} limit 10"))
+#spark.sql(f"select * from workspace.default.{tblname}").show()
+
+# COMMAND ----------
+
+# MAGIC %md
+# MAGIC ❌ It will NOT print the word "India".
+# MAGIC ✔ It will try to query a table named India.
+# MAGIC ✔ It will display the contents (rows) of that table.
+
+# COMMAND ----------
+
+#dbutils.widgets.text("cities", "accounts", "Table Name")
+#tblname1 = dbutils.widgets.get("cities")
+#display(spark.sql(f"select * from default.{tblname1} limit 10"))
+
 
 # COMMAND ----------
 
@@ -162,26 +193,28 @@ print(dict_all_widgets)
 
 # MAGIC %md
 # MAGIC #####4. Calling a child notebook (example_child_notebook.ipynb) from this parent notebook with parameters
-# MAGIC dbutils.widgets.text("param1", "default_value", "Your input parameter")
-# MAGIC param_value = dbutils.widgets.get("param1")
+# MAGIC dbutils.widgets.text("param1", "default_value", "Your input parameter")<br>
+# MAGIC param_value = dbutils.widgets.get("param1")<br>
 # MAGIC print("printing the parameters",param_value)
 
 # COMMAND ----------
 
-child_return_value=dbutils.notebook.run("/Workspace/Users/infoblisstech@gmail.com/databricks-code-repo/databricks_workouts_2025/1_DATABRICKS_NOTEBOOK_FUNDAMENTALS/4_child_notebook", 180,{"table_name":"cities1"})
+child_return_value=dbutils.notebook.run("/Workspace/Users/nivetha.ms99@gmail.com/databricks_code_repo/Learning/4_child_notebook3", 180,{"param1":"cities1"})
+print(child_return_value)
 
 # COMMAND ----------
 
 if True:
-    dbutils.notebook.run("/Workspace/Users/infoblisstech@gmail.com/databricks-code-repo/databricks_workouts_2025/1_DATABRICKS_NOTEBOOK_FUNDAMENTALS/4_child_notebook",600)
+    dbutils.notebook.run("/Workspace/Users/nivetha.ms99@gmail.com/databricks_code_repo/Learning/4_child_notebook3",600,{"param1":"cities1"})
+    
 else:
-    dbutils.notebook.run("/Workspace/Users/infoblisstech@gmail.com/databricks-code-repo/databricks_workouts_2025/1_DATABRICKS_NOTEBOOK_FUNDAMENTALS/4_child_notebook",300)
+    dbutils.notebook.run("/Workspace/Users/nivetha.ms99@gmail.com/databricks_code_repo/Learning/4_child_notebook3",300,{"param1":"cities1"})
 
 # COMMAND ----------
 
 import time
 for i in range(13):
-    dbutils.notebook.run("/Workspace/Users/infoblisstech@gmail.com/databricks-code-repo/databricks_workouts_2025/1_DATABRICKS_NOTEBOOK_FUNDAMENTALS/4_child_notebook",300)
+    dbutils.notebook.run("/Workspace/Users/nivetha.ms99@gmail.com/databricks_code_repo/Learning/4_child_notebook3",300)
     time.sleep(10)
 
 # COMMAND ----------
